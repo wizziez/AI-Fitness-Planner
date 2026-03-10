@@ -1,0 +1,139 @@
+ .appRoot {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  background-color: #0d0d0d;
+  color: #f5f5f5;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    'SF Pro Text', 'Segoe UI', sans-serif;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.headerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #111118;
+}
+
+/* legacy brand styles kept intentionally empty after Logo component */
+
+.tagline {
+  font-size: 0.78rem;
+  color: #7c7f93;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.loadingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 0, rgba(0, 240, 255, 0.16), transparent)
+      ,
+    rgba(3, 3, 6, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.loadingInner {
+  padding: 18px 22px;
+  border-radius: 18px;
+  border: 1px solid #1e1e24;
+  background-color: #141418;
+  box-shadow: 0 0 26px rgba(0, 240, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.loadingPulse {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+  animation: pulseGlow 1.2s ease-in-out infinite;
+}
+
+.loadingLabel {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #9cf7ff;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.viewToggle {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.backButton {
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: 1px solid #1e1e24;
+  background: #141418;
+  color: #e5e5ea;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.backButton:hover {
+  border-color: #00f0ff;
+  background: #181820;
+}
+
+.backButton:active {
+  transform: translateY(1px);
+}
+
+.backButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding: 40px 32px 56px;
+  }
+}
+

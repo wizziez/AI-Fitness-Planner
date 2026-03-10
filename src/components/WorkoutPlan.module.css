@@ -1,0 +1,399 @@
+ .wrapper {
+  background-color: #141418;
+  border-radius: 24px;
+  border: 1px solid #1e1e24;
+  padding: 24px 20px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 36px 80px rgba(0, 0, 0, 0.75);
+}
+
+.summaryCard {
+  background-color: #141418;
+  border-radius: 20px;
+  border: 1px solid #1e1e24;
+  padding: 24px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summaryLabel {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7c7f93;
+}
+
+.summaryTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.summarySubtitle {
+  font-size: 0.9rem;
+  color: #7c7f93;
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  background-color: #141418;
+  border-radius: 14px;
+  border: 1px solid #1e1e24;
+  padding: 10px 10px 9px;
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00f0ff;
+}
+
+.statValue {
+  margin-top: 6px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.statBadge {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #9cf7ff;
+}
+
+.tipsRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.tipCard {
+  background-color: #101016;
+  border-radius: 14px;
+  border: 1px solid #1e1e24;
+  padding: 12px 12px 11px;
+  display: flex;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #c3c6dd;
+}
+
+.tipIcon {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid #1e1e24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #00f0ff;
+}
+
+.tipMeta {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7c7f93;
+  margin-bottom: 4px;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+@media (min-width: 768px) {
+  .daysGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .daysGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dayCard {
+  background-color: #141418;
+  border-radius: 16px;
+  border: 1px solid #1e1e24;
+  padding: 16px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.dayTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dayLabel {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7c7f93;
+}
+
+.dayTitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: #8b8faf;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.headerRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.cardIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid #1e1e24;
+  background-color: #181821;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f0ff;
+  font-size: 0.9rem;
+}
+
+.dayPill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  background-color: rgba(0, 240, 255, 0.08);
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #00f0ff;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #1e1e24;
+  background-color: rgba(10, 10, 14, 0.9);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #9ca0c1;
+}
+
+.chipPrimary {
+  border-color: #00f0ff;
+  background-color: #00f0ff;
+  color: #02060a;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.55);
+}
+
+.chipIntensityHigh {
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.chipIntensityMedium {
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  color: #eab308;
+  background-color: rgba(234, 179, 8, 0.1);
+}
+
+.chipIntensityLow {
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.chipIntensityMax {
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.metricsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.metric {
+  min-width: 0;
+  flex: 1 1 30%;
+  font-size: 0.78rem;
+  color: #7c7f93;
+}
+
+.metric span {
+  display: block;
+}
+
+.metricValue {
+  margin-top: 3px;
+  font-size: 0.96rem;
+  color: #e5e5ea;
+}
+
+.metricsPillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.metricPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #1e1e24;
+  background-color: #141418;
+  font-size: 0.78rem;
+  color: #c3c6dd;
+}
+
+.metricIcon {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background-color: #181821;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #00f0ff;
+}
+
+.exerciseList {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 14px;
+  border: 1px solid #1e1e24;
+  background-color: #141418;
+}
+
+.exerciseItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  font-size: 0.84rem;
+  color: #d2d5ec;
+}
+
+.exerciseItem::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #00f0ff;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.exerciseItem:nth-child(even) {
+  background-color: #15151d;
+}
+
+.exerciseMeta {
+  font-size: 0.78rem;
+  color: #7c7f93;
+}
+
+.tipText {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #9ca0c1;
+}
+
+.footerNote {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #6b6e84;
+}
+
+.emptyState {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #7c7f93;
+}
+
+@media (min-width: 720px) {
+  .wrapper {
+    padding: 28px 28px 30px;
+  }
+
+  .summaryCard {
+    padding: 22px 22px 20px;
+  }
+
+  .tipsRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .daysGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .wrapper {
+    padding: 32px 32px 34px;
+  }
+
+  .daysGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
