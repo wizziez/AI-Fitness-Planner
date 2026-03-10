@@ -97,6 +97,7 @@ Key UI decisions (driven by the Figma "Elite Performance" design):
 The layout is fully responsive and usable on mobile, tablet, and desktop.
 
 ## AI Disclosure
+This application uses an AI language model (`openai/gpt-oss-120b:free` via [OpenRouter](https://openrouter.ai/)) to generate workout plans.
 
 Following the assignment requirements, this project was developed using a "Human-in-the-Loop" AI workflow.
 
@@ -149,14 +150,5 @@ npm run preview
 2. Click **Generate Plan** — the app sends your profile to the `openai/gpt-oss-120b:free` model via OpenRouter.
 3. The AI returns a structured JSON workout plan, which is rendered as a responsive weekly grid.
 
----
-
-## AI Disclosure
-
-This application uses an AI language model (`openai/gpt-oss-120b:free` via [OpenRouter](https://openrouter.ai/)) to generate workout plans.
-
-- **Generated content is not medical advice.** Always consult a qualified healthcare professional before starting a new training program.
-- Plans are generated dynamically and may vary between requests. Results are not guaranteed to be accurate, complete, or suitable for every individual.
-- The AI model may occasionally produce unexpected or incorrect output. The app validates the response schema and will surface an error if the response is malformed.
 
 
