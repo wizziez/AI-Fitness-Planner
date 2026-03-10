@@ -56,7 +56,7 @@ import WorkoutPlan, {
             'X-Title': 'AI Fitness Planner',
           },
           body: JSON.stringify({
-            model: 'openai/gpt-oss-120b:free',
+            model: 'meta-llama/llama-3.3-70b-instruct:free',
             messages: [
               {
                 role: 'system',
