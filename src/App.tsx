@@ -74,6 +74,9 @@ import WorkoutPlan, {
       )
  
       if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Rate limit reached on the free tier. Please wait 15–30 seconds and try again.')
+        }
         throw new Error(`Request failed with status ${response.status}`)
       }
  
