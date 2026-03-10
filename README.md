@@ -159,11 +159,4 @@ This application uses an AI language model (`openai/gpt-oss-120b:free` via [Open
 - Plans are generated dynamically and may vary between requests. Results are not guaranteed to be accurate, complete, or suitable for every individual.
 - The AI model may occasionally produce unexpected or incorrect output. The app validates the response schema and will surface an error if the response is malformed.
 
----
 
-## Tech Stack
-
-- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vitejs.dev/) (build tool)
-- CSS Modules (no Tailwind, no UI component libraries)
-- [OpenRouter API](https://openrouter.ai/) for AI inference
