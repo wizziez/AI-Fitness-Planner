@@ -50,7 +50,7 @@ React + TypeScript app that generates personalised weekly workout plans via Open
 By default, the app uses:
 
 - Endpoint: `https://openrouter.ai/api/v1/chat/completions`
-- Model: `deepseek/deepseek-chat-v3-0324:free` (overridable via `VITE_MODEL` in `.env`)
+- Model: `mistralai/mistral-7b-instruct:free` (overridable via `VITE_MODEL` in `.env`)
 
 ## Setup
 
@@ -134,14 +134,14 @@ Key UI decisions (driven by the Figma "Elite Performance" design):
 ## How It Works
 
 1. Fill in your fitness profile (age, weight, height, experience, goals, available days).
-2. Click **Generate Plan** — the app sends your profile to `deepseek/deepseek-chat-v3-0324:free` via OpenRouter.
+2. Click **Generate Plan** — the app sends your profile to `mistralai/mistral-7b-instruct:free` via OpenRouter.
 3. The AI returns a structured JSON workout plan rendered as a responsive weekly grid.
 
 ---
 
 ## AI Disclosure
 
-This application uses `deepseek/deepseek-chat-v3-0324:free` via [OpenRouter](https://openrouter.ai/) to generate workout plans.
+This application uses `mistralai/mistral-7b-instruct:free` via [OpenRouter](https://openrouter.ai/) to generate workout plans.
 
 > [!WARNING]
 > AI-generated plans are **not medical advice**. Always consult a qualified healthcare professional before starting a new training program.
