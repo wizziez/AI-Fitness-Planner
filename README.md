@@ -10,6 +10,8 @@ UI Preview:
 <img width="617" height="412" alt="Screenshot 2026-03-08 212001" src="https://github.com/user-attachments/assets/c2d3c1f9-91e5-47f2-b35d-9ba8dc8fb245" />
 <img width="918" height="883" alt="Screenshot 2026-03-08 210558" src="https://github.com/user-attachments/assets/69090df9-0f84-473c-ad60-d361df4e15f1" />
 
+
+
 Live Link: https://wizziez.github.io/AI-Fitness-Planner/
 
 ## Assignment Checklist
