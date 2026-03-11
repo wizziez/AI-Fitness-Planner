@@ -30,6 +30,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check API key secret
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "ERROR: VITE_OPENROUTER_API_KEY secret is EMPTY or NOT SET"
+            exit 1
+          else
+            echo "OK: VITE_OPENROUTER_API_KEY is set (length: ${#KEY})"
+          fi
+        env:
+          KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
+
       - name: Build
         run: npm run build
         env:
