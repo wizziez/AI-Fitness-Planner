@@ -43,6 +43,14 @@ import WorkoutPlan, {
     setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
+    console.debug('[AI Planner] key present:', !!apiKey, '| model env:', import.meta.env.VITE_MODEL)
+
+    if (!apiKey) {
+      setError('API key is not configured. Set VITE_OPENROUTER_API_KEY in your .env file (local) or as a GitHub Actions secret (deployed).')
+      setIsLoading(false)
+      return
+    }
+
     const model = import.meta.env.VITE_MODEL || 'google/gemma-3-27b-it:free'
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
