@@ -43,7 +43,7 @@ import WorkoutPlan, {
     setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
-    const model = import.meta.env.VITE_MODEL ?? 'mistralai/mistral-7b-instruct:free'
+    const model = import.meta.env.VITE_MODEL ?? 'meta-llama/llama-3.3-70b-instruct:free'
     const httpReferer = import.meta.env.VITE_HTTP_REFERER ?? 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE ?? 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ??
