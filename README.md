@@ -1,18 +1,16 @@
 # AI Fitness Planner
 
-Take‑home assignment implementation for the **AI Fitness Planner** web app.
+React + TypeScript app that generates personalised weekly workout plans via OpenRouter AI.
 
-The app lets a user enter basic profile and training preferences, sends a structured prompt to an OpenRouter model, and renders the returned JSON as an **Elite Performance Weekly** plan using responsive cards and UI elements.
+> [!TIP]
+> **🌐 Live demo:** https://wizziez.github.io/AI-Fitness-Planner/
+> **🐳 Docker:** `docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ghcr.io/wizziez/ai-fitness-planner:latest`
 
-UI Preview:
-
-<img width="615" height="865" alt="Screenshot 2026-03-08 211957" src="https://github.com/user-attachments/assets/3c70c7d5-415a-4601-aa0f-ae82ca24ea4c" />
-<img width="617" height="412" alt="Screenshot 2026-03-08 212001" src="https://github.com/user-attachments/assets/c2d3c1f9-91e5-47f2-b35d-9ba8dc8fb245" />
-<img width="918" height="883" alt="Screenshot 2026-03-08 210558" src="https://github.com/user-attachments/assets/69090df9-0f84-473c-ad60-d361df4e15f1" />
-
-
-
-Live Link: https://wizziez.github.io/AI-Fitness-Planner/
+<table><tr>
+<td><img width="260" src="https://github.com/user-attachments/assets/3c70c7d5-415a-4601-aa0f-ae82ca24ea4c" /></td>
+<td><img width="260" src="https://github.com/user-attachments/assets/c2d3c1f9-91e5-47f2-b35d-9ba8dc8fb245" /></td>
+<td><img width="260" src="https://github.com/user-attachments/assets/69090df9-0f84-473c-ad60-d361df4e15f1" /></td>
+</tr></table>
 
 ## Assignment Checklist
 
@@ -49,57 +47,10 @@ Live Link: https://wizziez.github.io/AI-Fitness-Planner/
 
 3. (Optional) Enable free endpoints in OpenRouter privacy settings if required by your chosen model.
 
-By default, the app is configured to use:
+By default, the app uses:
 
 - Endpoint: `https://openrouter.ai/api/v1/chat/completions`
-- Model: `meta-llama/llama-3.3-70b-instruct:free` (overridable via `VITE_MODEL` in `.env`)
-
-## Prompt & JSON Schema
-
-`App.tsx` sends:
-
-- A **system prompt** that instructs the model to return **only JSON** matching the assignment schema:
-  - `plan_name`
-  - `weekly_summary` (`total_days`, `rest_days`, `focus`)
-  - `days[]` (per‑day workout info, intensity, calories, exercises, tip)
-  - `nutrition_tip`, `recovery_tip`
-- A **user prompt** built from form inputs (age, weight, height, gender, experience, objective, days/week, notes).
-
-The response is parsed and validated before being displayed. If the content is missing, not a string, or doesn't match the expected structure, the app surfaces a friendly error and does not crash.
-
-## Error Handling & Safety
-
-- Non‑2xx responses from OpenRouter throw an error with the HTTP status code, which is surfaced to the user.
-- The code normalizes `message.content` to handle both string and array shapes returned by some models.
-- JSON parsing and basic schema checks are wrapped in `try/catch` so malformed responses do not break the UI.
-
-## UI & Responsiveness
-
-Key UI decisions (driven by the Figma "Elite Performance" design):
-
-- Root background `#0D0D0D`, cards `#141418` with `1px solid #1E1E24`.
-- Cyan accent `#00F0FF` for primary actions, chips, and key typography.
-- All‑caps headers with extra letter‑spacing (e.g. "ELITE PERFORMANCE WEEKLY").
-- Segmented controls and day buttons with dark selected state + cyan border/glow (no solid cyan fills).
-- Workout plan cards laid out in a responsive grid:
-  - Mobile: 1 column
-  - Tablet: 2 columns
-  - Desktop (≥1024px): 3 columns with 24px gap
-- Custom 6px cyan bullets for exercises (no default list styles).
-
-The layout is fully responsive and usable on mobile, tablet, and desktop.
-
-## AI Disclosure
-This application uses an AI language model (`meta-llama/llama-3.3-70b-instruct:free` via [OpenRouter](https://openrouter.ai/)) to generate workout plans.
-
-Following the assignment requirements, this project was developed using a "Human-in-the-Loop" AI workflow.
-
-Architectural Ownership: The core application logic, state management transitions, and data normalization strategies (such as the `normalisedCalories` helper) were designed by me.
-
-AI as a Force Multiplier: Tools like Cursor (Composer) and v0.dev were utilized to implement components, refine CSS Modules to match Figma tokens exactly, and ensure cross-device responsiveness.
-
-
----
+- Model: `deepseek/deepseek-chat-v3-0324:free` (overridable via `VITE_MODEL` in `.env`)
 
 ## Setup
 
@@ -118,8 +69,9 @@ cd AI-Fitness-Planner
 # 2. Install dependencies
 npm install
 
-# 3. Configure your API key — copy .env.sample to .env and fill in values:
+# 3. Configure your API key
 cp .env.sample .env
+# edit .env and set VITE_OPENROUTER_API_KEY=sk-or-...
 
 # 4. Start the development server
 npm run dev
@@ -150,11 +102,53 @@ docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ghcr.io/wizziez/ai-fit
 
 ---
 
+## Prompt & JSON Schema
+
+`App.tsx` sends:
+
+- A **system prompt** that instructs the model to return **only JSON** matching the schema:
+  - `plan_name`
+  - `weekly_summary` (`total_days`, `rest_days`, `focus`)
+  - `days[]` (per‑day workout info, intensity, calories, exercises, tip)
+  - `nutrition_tip`, `recovery_tip`
+- A **user prompt** built from form inputs (age, weight, height, gender, experience, objective, days/week, notes).
+
+The response is parsed and schema-validated before display. Malformed responses surface a friendly error without crashing.
+
+## Error Handling & Safety
+
+- Non‑2xx responses from OpenRouter throw an error surfaced to the user.
+- `message.content` is normalised to handle both string and array shapes returned by some models.
+- JSON parsing and schema checks are wrapped in `try/catch`.
+
+## UI & Responsiveness
+
+Key UI decisions (driven by the Figma "Elite Performance" design):
+
+- Root background `#0D0D0D`, cards `#141418` with `1px solid #1E1E24`.
+- Cyan accent `#00F0FF` for primary actions, chips, and key typography.
+- All‑caps headers with extra letter‑spacing.
+- Workout plan cards in a responsive grid: 1 col mobile → 2 col tablet → 3 col desktop (≥1024px).
+- Custom 6px cyan bullets for exercises.
+
 ## How It Works
 
 1. Fill in your fitness profile (age, weight, height, experience, goals, available days).
-2. Click **Generate Plan** — the app sends your profile to the `meta-llama/llama-3.3-70b-instruct:free` model via OpenRouter.
-3. The AI returns a structured JSON workout plan, which is rendered as a responsive weekly grid.
+2. Click **Generate Plan** — the app sends your profile to `deepseek/deepseek-chat-v3-0324:free` via OpenRouter.
+3. The AI returns a structured JSON workout plan rendered as a responsive weekly grid.
 
+---
 
+## AI Disclosure
+
+This application uses `deepseek/deepseek-chat-v3-0324:free` via [OpenRouter](https://openrouter.ai/) to generate workout plans.
+
+> [!WARNING]
+> AI-generated plans are **not medical advice**. Always consult a qualified healthcare professional before starting a new training program.
+
+This project was developed using a "Human-in-the-Loop" AI workflow.
+
+**Architectural Ownership:** Core logic, state transitions, and data normalisation strategies were designed by me.
+
+**AI as a Force Multiplier:** Tools like Cursor and v0.dev were used to implement components, refine CSS Modules to match Figma tokens, and ensure cross-device responsiveness.
 
