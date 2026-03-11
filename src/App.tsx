@@ -43,10 +43,10 @@ import WorkoutPlan, {
     setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
-    const model = import.meta.env.VITE_MODEL ?? 'google/gemma-3-27b-it:free'
-    const httpReferer = import.meta.env.VITE_HTTP_REFERER ?? 'https://ai-fitness-planner.local'
-    const appTitle = import.meta.env.VITE_APP_TITLE ?? 'AI Fitness Planner'
-    const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ??
+    const model = import.meta.env.VITE_MODEL || 'google/gemma-3-27b-it:free'
+    const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
+    const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
+    const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ||
       'You are an elite AI fitness coach. You must respond with ONLY a valid JSON object, no code fences, no comments, no additional text. The JSON must match this exact schema: { "plan_name": string, "weekly_summary": { "total_days": number, "rest_days": number, "focus": string }, "days": [ { "day": string, "type": string, "title": string, "duration_min": number, "intensity": "Low"|"Medium"|"High"|"Max", "calories_est": number, "exercises": [ { "name": string, "sets": number, "reps": string } ], "tip": string } ], "nutrition_tip": string, "recovery_tip": string }. Only return values that conform to this schema.'
  
     try {
