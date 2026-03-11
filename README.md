@@ -67,25 +67,6 @@ By default, the app is configured to use:
 
 The response is parsed and validated before being displayed. If the content is missing, not a string, or doesn't match the expected structure, the app surfaces a friendly error and does not crash.
 
-Then open the Vite URL shown in the terminal (typically `http://localhost:5173`).
-
-## Docker
-
-### Build locally
-
-```bash
-docker build -t ai-fitness-planner .
-docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ai-fitness-planner
-```
-
-Then open `http://localhost:8080`.
-
-### Pull pre-built image (published on each release)
-
-```bash
-docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ghcr.io/wizziez/ai-fitness-planner:latest
-```
-
 ## Error Handling & Safety
 
 - Non‑2xx responses from OpenRouter throw an error with the HTTP status code, which is surfaced to the user.
@@ -152,12 +133,21 @@ The app will be available at `http://localhost:5173` (or the next available port
 npm run build
 npm run preview
 ```
-## Running the App Locally
 
+### Docker
+
+**Build and run locally:**
 ```bash
-npm install
-npm run dev
+docker build -t ai-fitness-planner .
+docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ai-fitness-planner
 ```
+Then open `http://localhost:8080`.
+
+**Pull pre-built image (published on each tagged release):**
+```bash
+docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ghcr.io/wizziez/ai-fitness-planner:latest
+```
+
 ---
 
 ## How It Works
