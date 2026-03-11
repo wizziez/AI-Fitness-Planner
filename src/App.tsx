@@ -51,7 +51,7 @@ import WorkoutPlan, {
       return
     }
 
-    const model = import.meta.env.VITE_MODEL || 'meta-llama/llama-3.1-8b-instruct:free'
+    const model = import.meta.env.VITE_MODEL || 'mistralai/mistral-small-3.1-24b-instruct:free'
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ||
@@ -80,8 +80,7 @@ import WorkoutPlan, {
                 content: buildPromptFromForm(values),
               },
             ],
-            temperature: 0.8,
-          }),
+            temperature: 0.8,            response_format: { type: 'json_object' },          }),
         }
       )
  
