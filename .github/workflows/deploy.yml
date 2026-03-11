@@ -1,8 +1,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -35,6 +33,10 @@ jobs:
         env:
           VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
           VITE_BASE_PATH: /AI-Fitness-Planner/
+          VITE_MODEL: ${{ secrets.VITE_MODEL }}
+          VITE_HTTP_REFERER: ${{ secrets.VITE_HTTP_REFERER }}
+          VITE_APP_TITLE: ${{ secrets.VITE_APP_TITLE }}
+          VITE_SYSTEM_PROMPT: ${{ secrets.VITE_SYSTEM_PROMPT }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

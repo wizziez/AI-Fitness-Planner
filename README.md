@@ -52,9 +52,7 @@ Live Link: https://wizziez.github.io/AI-Fitness-Planner/
 By default, the app is configured to use:
 
 - Endpoint: `https://openrouter.ai/api/v1/chat/completions`
-- Model: `"openai/gpt-oss-120b:free"`
-
-You can change the `model` field in `src/App.tsx` to target a different free model if desired.
+- Model: `meta-llama/llama-3.3-70b-instruct:free` (overridable via `VITE_MODEL` in `.env`)
 
 ## Prompt & JSON Schema
 
@@ -70,6 +68,23 @@ You can change the `model` field in `src/App.tsx` to target a different free mod
 The response is parsed and validated before being displayed. If the content is missing, not a string, or doesn't match the expected structure, the app surfaces a friendly error and does not crash.
 
 Then open the Vite URL shown in the terminal (typically `http://localhost:5173`).
+
+## Docker
+
+### Build locally
+
+```bash
+docker build -t ai-fitness-planner .
+docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ai-fitness-planner
+```
+
+Then open `http://localhost:8080`.
+
+### Pull pre-built image (published on each release)
+
+```bash
+docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ghcr.io/wizziez/ai-fitness-planner:latest
+```
 
 ## Error Handling & Safety
 
@@ -94,7 +109,7 @@ Key UI decisions (driven by the Figma "Elite Performance" design):
 The layout is fully responsive and usable on mobile, tablet, and desktop.
 
 ## AI Disclosure
-This application uses an AI language model (`openai/gpt-oss-120b:free` via [OpenRouter](https://openrouter.ai/)) to generate workout plans.
+This application uses an AI language model (`meta-llama/llama-3.3-70b-instruct:free` via [OpenRouter](https://openrouter.ai/)) to generate workout plans.
 
 Following the assignment requirements, this project was developed using a "Human-in-the-Loop" AI workflow.
 
@@ -122,9 +137,8 @@ cd AI-Fitness-Planner
 # 2. Install dependencies
 npm install
 
-# 3. Configure your API key
-#    Create a .env file in the project root:
-echo "VITE_OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
+# 3. Configure your API key — copy .env.sample to .env and fill in values:
+cp .env.sample .env
 
 # 4. Start the development server
 npm run dev
@@ -149,7 +163,7 @@ npm run dev
 ## How It Works
 
 1. Fill in your fitness profile (age, weight, height, experience, goals, available days).
-2. Click **Generate Plan** — the app sends your profile to the `openai/gpt-oss-120b:free` model via OpenRouter.
+2. Click **Generate Plan** — the app sends your profile to the `meta-llama/llama-3.3-70b-instruct:free` model via OpenRouter.
 3. The AI returns a structured JSON workout plan, which is rendered as a responsive weekly grid.
 
 

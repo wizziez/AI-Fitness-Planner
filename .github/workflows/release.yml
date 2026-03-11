@@ -7,6 +7,10 @@ on:
 
 permissions:
   contents: write
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/ai-fitness-planner
 
 jobs:
   release:
@@ -29,11 +33,31 @@ jobs:
         env:
           VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
           VITE_BASE_PATH: /
+          VITE_MODEL: ${{ secrets.VITE_MODEL }}
+          VITE_HTTP_REFERER: ${{ secrets.VITE_HTTP_REFERER }}
+          VITE_APP_TITLE: ${{ secrets.VITE_APP_TITLE }}
+          VITE_SYSTEM_PROMPT: ${{ secrets.VITE_SYSTEM_PROMPT }}
 
       - name: Zip dist artifact
         run: |
           cd dist
           zip -r ../ai-fitness-planner-${{ github.ref_name }}.zip .
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.ref_name }}
+            ${{ env.IMAGE }}:latest
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -41,3 +65,9 @@ jobs:
           name: ${{ github.ref_name }}
           generate_release_notes: true
           files: ai-fitness-planner-${{ github.ref_name }}.zip
+          body: |
+            ## Docker
+            ```bash
+            docker run -e VITE_OPENROUTER_API_KEY=your_key -p 8080:80 ${{ env.IMAGE }}:${{ github.ref_name }}
+            ```
+            Image: `${{ env.IMAGE }}:${{ github.ref_name }}`
