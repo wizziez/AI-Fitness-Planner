@@ -38,9 +38,9 @@ import WorkoutPlan, {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleGeneratePlan = async (values: WorkoutFormValues) => {
+  const handleGeneratePlan = async (values: WorkoutFormValues, attempt = 0) => {
     setIsLoading(true)
-    setError(null)
+    if (attempt === 0) setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
     console.debug('[AI Planner] key present:', !!apiKey, '| model env:', import.meta.env.VITE_MODEL)
@@ -51,7 +51,7 @@ import WorkoutPlan, {
       return
     }
 
-    const model = import.meta.env.VITE_MODEL || 'google/gemma-3-27b-it:free'
+    const model = import.meta.env.VITE_MODEL || 'meta-llama/llama-3.1-8b-instruct:free'
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ||
@@ -87,7 +87,13 @@ import WorkoutPlan, {
  
       if (!response.ok) {
         if (response.status === 429) {
-          throw new Error('Rate limit reached on the free tier. Please wait 15–30 seconds and try again.')
+          if (attempt < 1) {
+            setError('Rate limited — retrying automatically in 20 seconds…')
+            await new Promise(r => setTimeout(r, 20_000))
+            setError(null)
+            return handleGeneratePlan(values, 1)
+          }
+          throw new Error('Rate limit reached on the free tier. Please wait a minute and try again.')
         }
         const errBody = await response.json().catch(() => null)
         const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
