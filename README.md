@@ -65,13 +65,6 @@ You can change the `model` field in `src/App.tsx` to target a different free mod
 
 The response is parsed and validated before being displayed. If the content is missing, not a string, or doesn't match the expected structure, the app surfaces a friendly error and does not crash.
 
-## Running the App Locally
-
-```bash
-npm install
-npm run dev
-```
-
 Then open the Vite URL shown in the terminal (typically `http://localhost:5173`).
 
 ## Error Handling & Safety
@@ -141,7 +134,12 @@ The app will be available at `http://localhost:5173` (or the next available port
 npm run build
 npm run preview
 ```
+## Running the App Locally
 
+```bash
+npm install
+npm run dev
+```
 ---
 
 ## How It Works
