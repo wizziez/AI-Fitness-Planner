@@ -43,7 +43,7 @@ import WorkoutPlan, {
     setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
-    const model = import.meta.env.VITE_MODEL ?? 'meta-llama/llama-3.3-70b-instruct:free'
+    const model = import.meta.env.VITE_MODEL ?? 'google/gemma-3-27b-it:free'
     const httpReferer = import.meta.env.VITE_HTTP_REFERER ?? 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE ?? 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ??
@@ -81,7 +81,9 @@ import WorkoutPlan, {
         if (response.status === 429) {
           throw new Error('Rate limit reached on the free tier. Please wait 15–30 seconds and try again.')
         }
-        throw new Error(`Request failed with status ${response.status}`)
+        const errBody = await response.json().catch(() => null)
+        const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
+        throw new Error(`Request failed with status ${response.status}: ${errMsg}`)
       }
  
       const json = await response.json()
