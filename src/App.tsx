@@ -50,92 +50,115 @@ import WorkoutPlan, {
       return
     }
 
-    // If a specific model is pinned via env, use it alone; otherwise let
-    // OpenRouter try the list in order server-side (one request, no browser retries).
-    const pinnedModel = import.meta.env.VITE_MODEL || 'meta-llama/llama-3.1-8b-instruct:free'
-    const modelsPayload = { model: pinnedModel }
+    // Fallback chain: if one model is unavailable (404), try the next
+    const modelChain = import.meta.env.VITE_MODEL
+      ? [import.meta.env.VITE_MODEL]
+      : [
+          'google/gemini-2.0-flash-exp:free',
+          'mistralai/mistral-nemo-2407:free',
+          'qwen/qwen-2-7b-instruct:free',
+          'meta-llama/llama-2-7b-chat:free',
+        ]
 
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ||
       'You are an elite AI fitness coach. You must respond with ONLY a valid JSON object, no code fences, no comments, no additional text. The JSON must match this exact schema: { "plan_name": string, "weekly_summary": { "total_days": number, "rest_days": number, "focus": string }, "days": [ { "day": string, "type": string, "title": string, "duration_min": number, "intensity": "Low"|"Medium"|"High"|"Max", "calories_est": number, "exercises": [ { "name": string, "sets": number, "reps": string } ], "tip": string } ], "nutrition_tip": string, "recovery_tip": string }. Only return values that conform to this schema.'
 
-    try {
-      const response = await fetch(
-        'https://openrouter.ai/api/v1/chat/completions',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-            'HTTP-Referer': httpReferer,
-            'X-Title': appTitle,
-          },
-          body: JSON.stringify({
-            ...modelsPayload,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: buildPromptFromForm(values) },
-            ],
-            temperature: 0.8,
-            response_format: { type: 'json_object' },
-          }),
+    let lastError: Error | null = null
+
+    for (const model of modelChain) {
+      try {
+        const response = await fetch(
+          'https://openrouter.ai/api/v1/chat/completions',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+              'HTTP-Referer': httpReferer,
+              'X-Title': appTitle,
+            },
+            body: JSON.stringify({
+              model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: buildPromptFromForm(values) },
+              ],
+              temperature: 0.8,
+              response_format: { type: 'json_object' },
+            }),
+          }
+        )
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => null)
+          const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
+
+          // If model is not found (404), try next model in chain
+          if (response.status === 404 && modelChain.length > 1) {
+            console.warn(`Model ${model} not available, trying next...`)
+            lastError = new Error(`${model}: ${errMsg}`)
+            continue
+          }
+
+          if (response.status === 429) {
+            throw new Error('Rate limit reached. Please wait 30 seconds and try again.')
+          }
+          throw new Error(`Request failed (${response.status}): ${errMsg}`)
         }
-      )
 
-      if (!response.ok) {
-        const errBody = await response.json().catch(() => null)
-        const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
-        if (response.status === 429) {
-          throw new Error('Rate limit reached. Please wait 30 seconds and try again.')
+        const json = await response.json()
+        const message = json?.choices?.[0]?.message
+        let content = message?.content as unknown
+
+        if (Array.isArray(content)) {
+          content = content
+            .map((part) =>
+              typeof part === 'string'
+                ? part
+                : typeof part?.text === 'string'
+                  ? part.text
+                  : ''
+            )
+            .join('')
         }
-        throw new Error(`Request failed (${response.status}): ${errMsg}`)
-      }
 
-      const json = await response.json()
-      const message = json?.choices?.[0]?.message
-      let content = message?.content as unknown
+        if (!content || typeof content !== 'string') {
+          console.error('Unexpected AI response shape:', json)
+          throw new Error('The AI response was empty or invalid.')
+        }
 
-      if (Array.isArray(content)) {
-        content = content
-          .map((part) =>
-            typeof part === 'string'
-              ? part
-              : typeof part?.text === 'string'
-                ? part.text
-                : ''
-          )
-          .join('')
-      }
+        const parsed: FitnessPlan = JSON.parse(content)
 
-      if (!content || typeof content !== 'string') {
-        console.error('Unexpected AI response shape:', json)
-        throw new Error('The AI response was empty or invalid.')
-      }
+        if (
+          !parsed ||
+          typeof parsed.plan_name !== 'string' ||
+          !parsed.weekly_summary ||
+          !Array.isArray(parsed.days)
+        ) {
+          throw new Error('The AI response did not match the expected schema.')
+        }
 
-      const parsed: FitnessPlan = JSON.parse(content)
- 
-      if (
-        !parsed ||
-        typeof parsed.plan_name !== 'string' ||
-        !parsed.weekly_summary ||
-        !Array.isArray(parsed.days)
-      ) {
-        throw new Error('The AI response did not match the expected schema.')
+        setPlan(parsed)
+        setView('plan')
+        return // Success, exit function
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err))
+        // If this is the last model, don't continue
+        if (model === modelChain[modelChain.length - 1]) {
+          break
+        }
       }
- 
-      setPlan(parsed)
-      setView('plan')
-    } catch (err) {
-      console.error('Error generating plan:', err)
-      const message =
-        err instanceof Error ? err.message : 'Unknown error occurred.'
-      setError(
-        `We had trouble generating your plan. Please try again in a moment. (${message})`
-      )
-    } finally {
-      setIsLoading(false)
     }
+
+    // All models failed
+    console.error('Error generating plan:', lastError)
+    const message = lastError?.message ?? 'Unknown error occurred.'
+    setError(
+      `We had trouble generating your plan. All available models are offline or rate-limited. (${message})`
+    )
+    setIsLoading(false)
   }
  
   const handleReset = () => {
