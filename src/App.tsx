@@ -54,10 +54,10 @@ import WorkoutPlan, {
     const modelChain = import.meta.env.VITE_MODEL
       ? [import.meta.env.VITE_MODEL]
       : [
-          'x-ai/grok-4.20-beta',
-          'x-ai/grok-4.20-multi-agent-beta',
-          'openai/gpt-3.5-turbo',
-          'deepseek/deepseek-chat',
+          'google/gemini-2.0-flash-exp:free',
+          'mistralai/mistral-nemo:free',
+          'meta-llama/llama-3-8b-instruct:free',
+          'microsoft/phi-3-mini-128k-instruct:free',
         ]
 
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
