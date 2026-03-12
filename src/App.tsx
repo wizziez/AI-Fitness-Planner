@@ -98,10 +98,11 @@ import WorkoutPlan, {
         if (shouldFallback) {
           const modelList = import.meta.env.VITE_MODEL ? [import.meta.env.VITE_MODEL] : FREE_MODELS
           if (modelIndex + 1 < modelList.length) {
-            setError(`Model ${modelIndex + 1}/${modelList.length} unavailable (${response.status}), trying next…`)
+            setError(`Model ${modelIndex + 1}/${modelList.length} busy, trying next in 5 s…`)
+            await new Promise(r => setTimeout(r, 5_000))
             return handleGeneratePlan(values, modelIndex + 1)
           }
-          throw new Error('All available models are unavailable right now. Please try again in a moment.')
+          throw new Error('All available models are busy right now. Please wait 30 seconds and try again.')
         }
         const errBody = await response.json().catch(() => null)
         const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
