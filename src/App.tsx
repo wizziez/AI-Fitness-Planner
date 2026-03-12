@@ -86,7 +86,6 @@ import WorkoutPlan, {
                 { role: 'user', content: buildPromptFromForm(values) },
               ],
               temperature: 0.8,
-              response_format: { type: 'json_object' },
             }),
           }
         )
