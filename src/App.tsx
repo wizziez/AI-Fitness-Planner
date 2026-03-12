@@ -54,8 +54,8 @@ import WorkoutPlan, {
     const modelChain = import.meta.env.VITE_MODEL
       ? [import.meta.env.VITE_MODEL]
       : [
-          'xai/grok-4.20-beta',
-          'xai/grok-4.20-multi-agent-beta',
+          'x-ai/grok-4.20-beta',
+          'x-ai/grok-4.20-multi-agent-beta',
           'openai/gpt-3.5-turbo',
           'deepseek/deepseek-chat',
         ]
