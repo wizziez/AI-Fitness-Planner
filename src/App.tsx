@@ -94,13 +94,14 @@ import WorkoutPlan, {
       )
  
       if (!response.ok) {
-        if (response.status === 429) {
+        const shouldFallback = response.status === 429 || response.status === 500 || response.status === 503
+        if (shouldFallback) {
           const modelList = import.meta.env.VITE_MODEL ? [import.meta.env.VITE_MODEL] : FREE_MODELS
           if (modelIndex + 1 < modelList.length) {
-            setError(`Model ${modelIndex + 1}/${modelList.length} rate limited, trying next…`)
+            setError(`Model ${modelIndex + 1}/${modelList.length} unavailable (${response.status}), trying next…`)
             return handleGeneratePlan(values, modelIndex + 1)
           }
-          throw new Error('All available models are rate limited. Please wait a minute and try again.')
+          throw new Error('All available models are unavailable right now. Please try again in a moment.')
         }
         const errBody = await response.json().catch(() => null)
         const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
