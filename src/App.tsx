@@ -52,17 +52,8 @@ import WorkoutPlan, {
 
     // If a specific model is pinned via env, use it alone; otherwise let
     // OpenRouter try the list in order server-side (one request, no browser retries).
-    const pinnedModel = import.meta.env.VITE_MODEL
-    const modelsPayload = pinnedModel
-      ? { model: pinnedModel }
-      : {
-          models: [
-            'mistralai/mistral-small-3.1-24b-instruct:free',
-            'nousresearch/hermes-3-llama-3.1-405b:free',
-            'google/gemma-3-27b-it:free',
-          ],
-          route: 'fallback',
-        }
+    const pinnedModel = import.meta.env.VITE_MODEL || 'mistralai/mistral-small-3.1-24b-instruct:free'
+    const modelsPayload = { model: pinnedModel }
 
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
