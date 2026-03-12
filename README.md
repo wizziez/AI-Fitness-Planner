@@ -3,6 +3,7 @@
 React + TypeScript app that generates personalised weekly workout plans via OpenRouter AI.
 
 
+> [!IMPORTANT]
 > **🌐 Live demo:** https://wizziez.github.io/AI-Fitness-Planner/
 >
 > **🐳 Docker image:** `ghcr.io/wizziez/ai-fitness-planner:latest`
