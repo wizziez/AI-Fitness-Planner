@@ -51,13 +51,14 @@ import WorkoutPlan, {
     }
 
     // Fallback chain: if one model is unavailable (404), try the next
+    // Updated with currently active free models from OpenRouter API
     const modelChain = import.meta.env.VITE_MODEL
       ? [import.meta.env.VITE_MODEL]
       : [
-          'google/gemini-2.0-flash-exp:free',
-          'mistralai/mistral-nemo:free',
-          'meta-llama/llama-3-8b-instruct:free',
-          'microsoft/phi-3-mini-128k-instruct:free',
+          'openrouter/free', // Generic robust fallback
+          'meta-llama/llama-3.3-70b-instruct:free',
+          'google/gemma-3-27b-it:free',
+          'mistralai/mistral-small-3.1-24b-instruct:free',
         ]
 
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
