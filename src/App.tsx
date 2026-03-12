@@ -52,7 +52,7 @@ import WorkoutPlan, {
 
     // If a specific model is pinned via env, use it alone; otherwise let
     // OpenRouter try the list in order server-side (one request, no browser retries).
-    const pinnedModel = import.meta.env.VITE_MODEL || 'meta-llama/llama-3.2-90b-vision-instruct:free'
+    const pinnedModel = import.meta.env.VITE_MODEL || 'meta-llama/llama-3.1-8b-instruct:free'
     const modelsPayload = { model: pinnedModel }
 
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
