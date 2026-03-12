@@ -38,16 +38,9 @@ import WorkoutPlan, {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  const FREE_MODELS = [
-    'mistralai/mistral-small-3.1-24b-instruct:free',
-    'nousresearch/hermes-3-llama-3.1-405b:free',
-    'google/gemma-3-27b-it:free',
-    'meta-llama/llama-3.3-70b-instruct:free',
-  ]
-
-  const handleGeneratePlan = async (values: WorkoutFormValues, modelIndex = 0) => {
+  const handleGeneratePlan = async (values: WorkoutFormValues) => {
     setIsLoading(true)
-    if (modelIndex === 0) setError(null)
+    setError(null)
 
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
 
@@ -57,15 +50,26 @@ import WorkoutPlan, {
       return
     }
 
-    const modelList = import.meta.env.VITE_MODEL
-      ? [import.meta.env.VITE_MODEL]
-      : FREE_MODELS
-    const model = modelList[modelIndex] ?? modelList[0]
+    // If a specific model is pinned via env, use it alone; otherwise let
+    // OpenRouter try the list in order server-side (one request, no browser retries).
+    const pinnedModel = import.meta.env.VITE_MODEL
+    const modelsPayload = pinnedModel
+      ? { model: pinnedModel }
+      : {
+          models: [
+            'mistralai/mistral-small-3.1-24b-instruct:free',
+            'nousresearch/hermes-3-llama-3.1-405b:free',
+            'google/gemma-3-27b-it:free',
+            'meta-llama/llama-3.3-70b-instruct:free',
+          ],
+          route: 'fallback',
+        }
+
     const httpReferer = import.meta.env.VITE_HTTP_REFERER || 'https://ai-fitness-planner.local'
     const appTitle = import.meta.env.VITE_APP_TITLE || 'AI Fitness Planner'
     const systemPrompt = import.meta.env.VITE_SYSTEM_PROMPT ||
       'You are an elite AI fitness coach. You must respond with ONLY a valid JSON object, no code fences, no comments, no additional text. The JSON must match this exact schema: { "plan_name": string, "weekly_summary": { "total_days": number, "rest_days": number, "focus": string }, "days": [ { "day": string, "type": string, "title": string, "duration_min": number, "intensity": "Low"|"Medium"|"High"|"Max", "calories_est": number, "exercises": [ { "name": string, "sets": number, "reps": string } ], "tip": string } ], "nutrition_tip": string, "recovery_tip": string }. Only return values that conform to this schema.'
- 
+
     try {
       const response = await fetch(
         'https://openrouter.ai/api/v1/chat/completions',
@@ -78,37 +82,26 @@ import WorkoutPlan, {
             'X-Title': appTitle,
           },
           body: JSON.stringify({
-            model,
+            ...modelsPayload,
             messages: [
-              {
-                role: 'system',
-                content: systemPrompt,
-              },
-              {
-                role: 'user',
-                content: buildPromptFromForm(values),
-              },
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: buildPromptFromForm(values) },
             ],
-            temperature: 0.8,            response_format: { type: 'json_object' },          }),
+            temperature: 0.8,
+            response_format: { type: 'json_object' },
+          }),
         }
       )
- 
+
       if (!response.ok) {
-        const shouldFallback = response.status === 429 || response.status === 500 || response.status === 503
-        if (shouldFallback) {
-          const modelList = import.meta.env.VITE_MODEL ? [import.meta.env.VITE_MODEL] : FREE_MODELS
-          if (modelIndex + 1 < modelList.length) {
-            setError(`Model ${modelIndex + 1}/${modelList.length} busy, trying next in 5 s…`)
-            await new Promise(r => setTimeout(r, 5_000))
-            return handleGeneratePlan(values, modelIndex + 1)
-          }
-          throw new Error('All available models are busy right now. Please wait 30 seconds and try again.')
-        }
         const errBody = await response.json().catch(() => null)
         const errMsg = errBody?.error?.message ?? errBody?.message ?? response.statusText
-        throw new Error(`Request failed with status ${response.status}: ${errMsg}`)
+        if (response.status === 429) {
+          throw new Error('Rate limit reached. Please wait 30 seconds and try again.')
+        }
+        throw new Error(`Request failed (${response.status}): ${errMsg}`)
       }
- 
+
       const json = await response.json()
       const message = json?.choices?.[0]?.message
       let content = message?.content as unknown
