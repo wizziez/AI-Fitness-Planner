@@ -142,6 +142,7 @@ import WorkoutPlan, {
 
         setPlan(parsed)
         setView('plan')
+        setIsLoading(false)
         return // Success, exit function
       } catch (err) {
         lastError = err instanceof Error ? err : new Error(String(err))
